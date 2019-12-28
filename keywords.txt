@@ -1,0 +1,12 @@
+GBT24LTR11	KEYWORD1
+			
+init		KEYWORD2
+getSpeed	KEYWORD2
+getTargetState	KEYWORD2
+getIQADC	KEYWORD2
+setSpeedScope	KEYWORD2
+getSpeedScope	KEYWORD2
+setMode		KEYWORD2
+getMode		KEYWORD2
+setThreshold	KEYWORD2
+getThreshold	KEYWORD2
