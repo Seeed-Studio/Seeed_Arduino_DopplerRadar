@@ -22,7 +22,7 @@ Connect DopplerRadar to the serial port of the board.In this example, we use har
 - Start a project.  
 
 - You can choose to use the hardware or software serial port.
-  ```
+  ```c++
       #define COMSerial Serial
       #define ShowSerial SerialUSB
       GBT24LTR11<HardwareSerial> GBT;
@@ -33,7 +33,7 @@ Connect DopplerRadar to the serial port of the board.In this example, we use har
 - Then initialize GBT in the setup function.
 
 - Set the working mode.
-  ```
+  ```c++
   void setup()
   {
     // put your setup code here, to run once:
@@ -54,7 +54,7 @@ Connect DopplerRadar to the serial port of the board.In this example, we use har
   
   ```
 - Gets the speed value and target state.
-```
+```c++
 void loop()
 {
 	 // put your main code here, to run repeatedly:
