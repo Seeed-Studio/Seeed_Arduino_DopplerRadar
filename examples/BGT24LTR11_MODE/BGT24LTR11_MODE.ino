@@ -9,7 +9,7 @@
 #endif
 
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
-    #define COMSerial Serial
+    #define COMSerial Serial1
     #define ShowSerial SerialUSB
 
     GBT24LTR11<Uart> GBT;
