@@ -25,12 +25,12 @@ Connect DopplerRadar to the serial port of the board.In this example, we use har
   ```c++
       #define COMSerial Serial
       #define ShowSerial SerialUSB
-      GBT24LTR11<HardwareSerial> GBT;
+      BGT24LTR11<HardwareSerial> BGT;
   ```
 
 - Set the communication baud rate of the DopplerRadar module (115200).
 
-- Then initialize GBT in the setup function.
+- Then initialize BGT in the setup function.
 
 - Set the working mode.
   ```c++
@@ -39,7 +39,7 @@ Connect DopplerRadar to the serial port of the board.In this example, we use har
     // put your setup code here, to run once:
     ShowSerial.begin(9600);
     COMSerial.begin(115200);
-    GBT.init(COMSerial);
+    BGT.init(COMSerial);
     while (!ShowSerial)
       ;
     while (!COMSerial)
@@ -48,10 +48,10 @@ Connect DopplerRadar to the serial port of the board.In this example, we use har
      * MODE 0 -->detection target mode
      * MODE 1 -->I/Q ADC mode
      */
-    while (!GBT.setMode(0))
+    while (!BGT.setMode(0))
       ;
   }
-  
+
   ```
 - Gets the speed value and target state.
 ```c++
@@ -60,8 +60,8 @@ void loop()
 	 // put your main code here, to run repeatedly:
 	 uint16_t state=0;
 	 ShowSerial.print("target speed:");
-	 ShowSerial.println(GBT.getSpeed());
-	 state = GBT.getTargetState();
+	 ShowSerial.println(BGT.getSpeed());
+	 state = BGT.getTargetState();
 	 //2 --> target approach
 	 //1 --> target leave
 	 //0 --> Not Found target
@@ -75,7 +75,7 @@ void loop()
 	 }
 	 delay(200);
 }
-	
+
  ```
 
 ## Methods
@@ -94,7 +94,7 @@ void loop()
 	- mode 0 :detect the target mode.
 	- mode 1 :Gets the I/Q information ADC value mode.
 
-	
+
 - uint8_t getMode();
 
 - uint8_t setThreshold(uint16_t whreshold);
@@ -104,4 +104,3 @@ void loop()
 ## License
 
 See LICENSE.
-
