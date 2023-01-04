@@ -102,7 +102,7 @@ uint8_t BGT24LTR11<T>::setSpeedScope(uint16_t maxspeed, uint16_t minspeed) {
     uint16_t data[8] = {0};
     uint16_t len = 0;
     unsigned char commandC3[11] = {0x55, 0x2A, 0xC3, 0x00, 0x06, 0x02, 0x09, 0x01, 0x03, 0x01, 0x57};
-    if ((maxspeed > 65535) || (minspeed < 0) || (maxspeed < minspeed)) {
+    if (maxspeed < minspeed) {
         return 0;
     }
     commandC3[5] = maxspeed / 256;
@@ -172,7 +172,7 @@ uint8_t BGT24LTR11<T>::getSpeedScope(uint16_t* maxspeed, uint16_t* minspeed) {
 ****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::setMode(uint16_t mode) {
-    if (mode > 1 || mode < 0) {
+    if (mode > 1) {
         return 0;
     }
     unsigned char commandC5[8] = {0x55, 0x2A, 0xC5, 0x00, 0x03, 0x00, 0x01, 0x47};
