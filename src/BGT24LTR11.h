@@ -46,6 +46,9 @@ class BGT24LTR11 {
     uint8_t getMode();
     uint8_t setThreshold(uint16_t whreshold);
     uint16_t getThreshold();
+    uint16_t calculateChecksum(uint16_t *data, uint16_t data_length);
+    uint16_t messageChecksum(uint16_t high_order, uint16_t low_order);
+
 };
 
 #endif
