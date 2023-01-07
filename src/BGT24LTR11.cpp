@@ -6,6 +6,33 @@ void BGT24LTR11<T>::init(T& serialPort) {
 }
 
 /****************************************************************
+    Function Name: calculateChecksum
+    Description: Calculate checksum from data bytes
+    Parameters: data, pointer to uint16_t data array. data_length, length of array to calculate checksum over
+    Return: uint16_t value of checksum
+****************************************************************/
+template <class T>
+uint16_t BGT24LTR11<T>::calculateChecksum(uint16_t *data, uint16_t data_length) {
+    uint16_t checksum = 0;
+    for (uint16_t i = 0;  i < data_length; ++i) {
+        checksum += data[i];
+    }
+
+    return checksum;
+}
+
+/****************************************************************
+    Function Name: messageChecksum
+    Description: Transform checksum from message to single value
+    Parameters: high_order, low_order, last two checksum bytes from the message
+    Return: uint16_t value of checksum
+****************************************************************/
+template <class T>
+uint16_t BGT24LTR11<T>::messageChecksum(uint16_t high_order, uint16_t low_order) {
+    return ((high_order << 8) + low_order);
+}
+
+/****************************************************************
     Function Name: getSpeed
     Description: Target acquisition speed
     Parameters: None
@@ -22,6 +49,14 @@ uint16_t BGT24LTR11<T>::getSpeed() {
                     for (int i = 0; i < 7; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_GET_TARGET + calculateChecksum(data, 5);
+                    const uint16_t msg_checksum = messageChecksum(data[5], data[6]);
+
+                    if (checksum != msg_checksum) {
+                        return -1;
+                    }
+
                     return (data[2] * 256 + data[3]);
                 }
             }
@@ -48,6 +83,14 @@ uint16_t BGT24LTR11<T>::getTargetState() {
                     for (int i = 0; i < 7; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_GET_TARGET + calculateChecksum(data, 5);
+                    const uint16_t msg_checksum = messageChecksum(data[5], data[6]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     //2 --> target approach
                     //1 --> target leave
                     //0 --> Not Found target
@@ -122,6 +165,14 @@ uint8_t BGT24LTR11<T>::setSpeedScope(uint16_t maxspeed, uint16_t minspeed) {
                     for (int i = 0; i < 8; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_SET_SPEED_SCOPE + calculateChecksum(data, 6);
+                    const uint16_t msg_checksum = messageChecksum(data[6], data[7]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     if (((data[2] * 256 + data[3]) == maxspeed) && ((data[4] * 256 + data[5]) == minspeed)) {
                         return 1;
                     } else {
@@ -153,6 +204,14 @@ uint8_t BGT24LTR11<T>::getSpeedScope(uint16_t* maxspeed, uint16_t* minspeed) {
                     for (int i = 0; i < 8; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_GET_SPEED_SCOPE + calculateChecksum(data, 6);
+                    const uint16_t msg_checksum = messageChecksum(data[6], data[7]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     *maxspeed = data[2] * 256 + data[3];
                     *minspeed = data[4] * 256 + data[5];
                     return 1;
@@ -189,6 +248,14 @@ uint8_t BGT24LTR11<T>::setMode(uint16_t mode) {
                     for (int i = 0; i < 5; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_SET_MODE + calculateChecksum(data, 3);
+                    const uint16_t msg_checksum = messageChecksum(data[3], data[4]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     if (data[2] == mode) {
                         return 1;
                     } else {
@@ -220,6 +287,14 @@ uint8_t BGT24LTR11<T>::getMode() {
                     for (int i = 0; i < 5; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_GET_MODE + calculateChecksum(data, 3);
+                    const uint16_t msg_checksum = messageChecksum(data[3], data[4]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     //return 1 ---> detect the target mode
                     //return 2 ---> Reported I/Q ADC
                     //return 0 ---> fail
@@ -266,6 +341,14 @@ uint8_t BGT24LTR11<T>::setThreshold(uint16_t threshold) {
                     for (int i = 0; i < 8; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_SET_THRESHOLD + calculateChecksum(data, 6);
+                    const uint16_t msg_checksum = messageChecksum(data[6], data[7]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     uint16_t thr = data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5];
                     if (thr == threshold) {
                         return 1;
@@ -298,6 +381,14 @@ uint16_t BGT24LTR11<T>::getThreshold() {
                     for (int i = 0; i < 8; i++) {
                         data[i] = _serial->read();
                     }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_GET_THRESHOLD + calculateChecksum(data, 6);
+                    const uint16_t msg_checksum = messageChecksum(data[6], data[7]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
                     uint16_t whr = 0;
                     whr = data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5];
                     return whr;
