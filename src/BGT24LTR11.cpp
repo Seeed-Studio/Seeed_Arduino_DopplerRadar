@@ -55,7 +55,6 @@ uint16_t BGT24LTR11<T>::getTargetState() {
                 }
             }
         }
-        delay(20);
         /* code */
     }
     return 0;
