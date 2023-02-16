@@ -33,6 +33,57 @@ uint16_t BGT24LTR11<T>::messageChecksum(uint16_t high_order, uint16_t low_order)
 }
 
 /****************************************************************
+    Function Name: getInfo
+    Description: Get target state and speed in one call
+    Parameters: targetState, speed
+    Return: 1:success 0:fail
+****************************************************************/
+template <class T>
+uint8_t BGT24LTR11<T>::getInfo(uint16_t* target_tate, uint16_t* speed) {
+    uint16_t data[7] = {0};
+
+    // clear rx buffer (good for sequential processing)
+    while (_serial->available() > 0) {
+        _serial->read();
+    }
+
+    _serial->write(commandC1, 7);
+
+    // ensures the data is written to the wire, flushes also rx buffer again
+    _serial->flush();
+
+    // there might be a small timewindow where no data is available (module is processing request and preparing response) so we wait until data is present
+    const uint32_t start_time = micros();
+    while ((_serial->available() == 0) && ((unsigned long)(micros() - start_time) < 5000));
+
+    // as long as data is available, seek through it and try to parse the response datagram
+    while (_serial->available() > 0) {
+        if (_serial->read() == BGT24LTR11_MESSAGE_HEAD) {
+            if (_serial->read() == BGT24LTR11_SEND_ADDRESS) {
+                if (_serial->read() == BGT24LTR11_COMMAND_GET_TARGET) {
+                    for (int i = 0; i < 7; i++) {
+                        data[i] = _serial->read();
+                    }
+
+                    const uint16_t checksum = BGT24LTR11_MESSAGE_HEAD + BGT24LTR11_SEND_ADDRESS + BGT24LTR11_COMMAND_GET_TARGET + calculateChecksum(data, 5);
+                    const uint16_t msg_checksum = messageChecksum(data[5], data[6]);
+
+                    if (checksum != msg_checksum) {
+                        return 0;
+                    }
+
+                    *speed = (data[2] * 256 + data[3]);
+                    *target_tate = data[4];
+
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+/****************************************************************
     Function Name: getSpeed
     Description: Target acquisition speed
     Parameters: None
