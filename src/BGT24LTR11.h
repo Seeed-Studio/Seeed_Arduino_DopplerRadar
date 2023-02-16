@@ -37,6 +37,7 @@ class BGT24LTR11 {
     /* data */
   public:
     void init(T& serialPort);
+    uint8_t getInfo(uint16_t* target_tate, uint16_t* speed);
     uint16_t getSpeed();
     uint16_t getTargetState();
     uint8_t getIQADC(uint16_t I_d[], uint16_t Q_d[], uint16_t* len);
