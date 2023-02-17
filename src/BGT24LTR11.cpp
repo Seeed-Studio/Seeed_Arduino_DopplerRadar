@@ -439,9 +439,7 @@ uint16_t BGT24LTR11<T>::getThreshold() {
                         return 0;
                     }
 
-                    uint16_t whr = 0;
-                    whr = data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5];
-                    return whr;
+                    return data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5];
                 }
             }
         }
