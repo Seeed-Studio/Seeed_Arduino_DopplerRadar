@@ -36,18 +36,108 @@ class BGT24LTR11 {
                                  };
     /* data */
   public:
+    /****************************************************************
+    Function Name: init
+    Description: hand over serial port where module is connected to
+    Parameters: serialPort
+    Return: void
+    ****************************************************************/
     void init(T& serialPort);
+
+    /****************************************************************
+    Function Name: getInfo
+    Description: Get target state and speed in one call
+    Parameters: targetState, speed
+    Return: 1:success 0:fail
+    ****************************************************************/
     uint8_t getInfo(uint16_t* target_tate, uint16_t* speed);
+
+    /****************************************************************
+    Function Name: getSpeed
+    Description: Target acquisition speed
+    Parameters: None
+    Return: >0:success speed -1:fail
+    ****************************************************************/
     uint16_t getSpeed();
+
+    /****************************************************************
+    Function Name: getTargetState
+    Description: Get target state
+    Parameters: None
+    Return: 2:target approach   1:target leave  0:Not Found target or error
+    ****************************************************************/
     uint16_t getTargetState();
+
+    /****************************************************************
+    Function Name: getIQADC
+    Description: Gets the I/Q information ADC value.
+    Parameters: I_d,Q_d,Store an array of I/Q information. len,The length of the array.
+    Return: 1:success  0:fail
+    ****************************************************************/
     uint8_t getIQADC(uint16_t I_d[], uint16_t Q_d[], uint16_t* len);
+
+    /****************************************************************
+        Function Name: setSpeedScope
+        Description: Set the detection speed range.
+        Parameters: maxspeed,minspeed 0-65535
+        Return: 1:success  0:fail
+    ****************************************************************/
     uint8_t setSpeedScope(uint16_t maxspeed, uint16_t minspeed);
+
+    /****************************************************************
+        Function Name: getSpeedScope
+        Description: Get the detection speed range.
+        Parameters: maxspeed,minspeed
+        Return: 1:success  0:fail
+    ****************************************************************/
     uint8_t getSpeedScope(uint16_t* maxspeed, uint16_t* minspeed);
+
+    /****************************************************************
+        Function Name: setMode
+        Description: Set module mode.
+        Parameters: 1:Gets the I/Q information ADC value mode. 0:To detect the target mode.
+        Return: 1:success  0:fail
+    ****************************************************************/
     uint8_t setMode(uint16_t mode);
+
+    /****************************************************************
+    Function Name: getMode
+    Description: Get module mode.
+    Parameters: none.
+    Return: 1:detect the target mode  2:Reported I/Q ADC  0:fail
+    ****************************************************************/
     uint8_t getMode();
+
+    /****************************************************************
+        Function Name: setThreshold
+        Description: Set threshold which determines detection range.
+        Parameters: threshold.
+        Return: 1:success  0:fail
+    ****************************************************************/
     uint8_t setThreshold(uint16_t threshold);
+
+    /****************************************************************
+        Function Name: getThreshold
+        Description: Get threshold which determines detection range.
+        Parameters: None.
+        Return: 1:success  0:fail
+    ****************************************************************/
     uint16_t getThreshold();
+
+    /****************************************************************
+    Function Name: calculateChecksum
+    Description: Calculate checksum from data bytes
+    Parameters: data, pointer to uint16_t data array. data_length, length of array to calculate checksum over
+    Return: uint16_t value of checksum
+    ****************************************************************/
     uint16_t calculateChecksum(uint16_t *data, uint16_t data_length);
+
+    /****************************************************************
+    Function Name: messageChecksum
+    Description: Transform checksum from message to single value
+    Parameters: high_order, low_order, last two checksum bytes from the message
+    Return: uint16_t value of checksum
+    ****************************************************************/
     uint16_t messageChecksum(uint16_t high_order, uint16_t low_order);
 
 };

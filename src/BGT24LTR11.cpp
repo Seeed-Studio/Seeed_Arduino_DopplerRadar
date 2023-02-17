@@ -5,12 +5,6 @@ void BGT24LTR11<T>::init(T& serialPort) {
     _serial = &serialPort;
 }
 
-/****************************************************************
-    Function Name: calculateChecksum
-    Description: Calculate checksum from data bytes
-    Parameters: data, pointer to uint16_t data array. data_length, length of array to calculate checksum over
-    Return: uint16_t value of checksum
-****************************************************************/
 template <class T>
 uint16_t BGT24LTR11<T>::calculateChecksum(uint16_t *data, uint16_t data_length) {
     uint16_t checksum = 0;
@@ -21,23 +15,11 @@ uint16_t BGT24LTR11<T>::calculateChecksum(uint16_t *data, uint16_t data_length) 
     return checksum;
 }
 
-/****************************************************************
-    Function Name: messageChecksum
-    Description: Transform checksum from message to single value
-    Parameters: high_order, low_order, last two checksum bytes from the message
-    Return: uint16_t value of checksum
-****************************************************************/
 template <class T>
 uint16_t BGT24LTR11<T>::messageChecksum(uint16_t high_order, uint16_t low_order) {
     return ((high_order << 8) + low_order);
 }
 
-/****************************************************************
-    Function Name: getInfo
-    Description: Get target state and speed in one call
-    Parameters: targetState, speed
-    Return: 1:success 0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::getInfo(uint16_t* target_tate, uint16_t* speed) {
     uint16_t data[7] = {0};
@@ -83,12 +65,6 @@ uint8_t BGT24LTR11<T>::getInfo(uint16_t* target_tate, uint16_t* speed) {
     return 0;
 }
 
-/****************************************************************
-    Function Name: getSpeed
-    Description: Target acquisition speed
-    Parameters: None
-    Return: >0:success speed -1:fail
-****************************************************************/
 template <class T>
 uint16_t BGT24LTR11<T>::getSpeed() {
     uint16_t data[7] = {0};
@@ -117,12 +93,6 @@ uint16_t BGT24LTR11<T>::getSpeed() {
     return -1;
 }
 
-/****************************************************************
-    Function Name: getTargetState
-    Description: Get target state
-    Parameters: None
-    Return: 2:target approach   1:target leave  0:Not Found target
-****************************************************************/
 template <class T>
 uint16_t BGT24LTR11<T>::getTargetState() {
     uint16_t data[7] = {0};
@@ -154,12 +124,6 @@ uint16_t BGT24LTR11<T>::getTargetState() {
     return 0;
 }
 
-/****************************************************************
-    Function Name: getIQADC
-    Description: Gets the I/Q information ADC value.
-    Parameters: I_d,Q_d,Store an array of I/Q information. len,The length of the array.
-    Return: 1:success  0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::getIQADC(uint16_t I_d[], uint16_t Q_d[], uint16_t* len) {
     while (_serial->available() > 0) {
@@ -184,12 +148,6 @@ uint8_t BGT24LTR11<T>::getIQADC(uint16_t I_d[], uint16_t Q_d[], uint16_t* len) {
     return 0;
 }
 
-/****************************************************************
-    Function Name: setSpeedScope
-    Description: Set the detection speed range.
-    Parameters: maxspeed,minspeed 0-65535
-    Return: 1:success  0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::setSpeedScope(uint16_t maxspeed, uint16_t minspeed) {
     uint16_t data[8] = {0};
@@ -236,12 +194,6 @@ uint8_t BGT24LTR11<T>::setSpeedScope(uint16_t maxspeed, uint16_t minspeed) {
     return 0;
 }
 
-/****************************************************************
-    Function Name: getSpeedScope
-    Description: Get the detection speed range.
-    Parameters: maxspeed,minspeed
-    Return: 1:success  0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::getSpeedScope(uint16_t* maxspeed, uint16_t* minspeed) {
     unsigned char commandC4[7] = {0x55, 0x2A, 0xC4, 0x00, 0x02, 0x01, 0x45};
@@ -273,12 +225,6 @@ uint8_t BGT24LTR11<T>::getSpeedScope(uint16_t* maxspeed, uint16_t* minspeed) {
     return 0;
 }
 
-/****************************************************************
-    Function Name: setMode
-    Description: Set module mode.
-    Parameters: 1:Gets the I/Q information ADC value mode. 0:To detect the target mode.
-    Return: 1:success  0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::setMode(uint16_t mode) {
     if (mode > 1) {
@@ -319,12 +265,6 @@ uint8_t BGT24LTR11<T>::setMode(uint16_t mode) {
     return 0;
 }
 
-/****************************************************************
-    Function Name: getMode
-    Description: Get module mode.
-    Parameters: none.
-    Return: 1:detect the target mode  2:Reported I/Q ADC  0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::getMode() {
     unsigned char commandC6[7] = {0x55, 0x2A, 0xC6, 0x00, 0x02, 0x01, 0x47};
@@ -363,12 +303,6 @@ uint8_t BGT24LTR11<T>::getMode() {
     return 0;
 }
 
-/****************************************************************
-    Function Name: setThreshold
-    Description: Set threshold.
-    Parameters: threshold.
-    Return: 1:success  0:fail
-****************************************************************/
 template <class T>
 uint8_t BGT24LTR11<T>::setThreshold(uint16_t threshold) {
     int len = 0;
@@ -413,12 +347,6 @@ uint8_t BGT24LTR11<T>::setThreshold(uint16_t threshold) {
     return 0;
 }
 
-/****************************************************************
-    Function Name: getThreshold
-    Description: Get threshold.
-    Parameters: None.
-    Return: 1:success  0:fail
-****************************************************************/
 template <class T>
 uint16_t BGT24LTR11<T>::getThreshold() {
     unsigned char commandC8[7] = {0x55, 0x2A, 0xC8, 0x00, 0x02, 0x01, 0x49};
