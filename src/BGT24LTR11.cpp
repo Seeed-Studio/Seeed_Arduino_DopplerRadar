@@ -376,12 +376,12 @@ uint16_t BGT24LTR11<T>::getThreshold() {
     return 0;
 }
 
-#ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
+#if defined(ARDUINO_SAMD_VARIANT_COMPLIANCE) || defined(NRF52840_XXAA) || defined(SEEED_XIAO_M0)
     template class BGT24LTR11<Uart>;
 #endif
 template class BGT24LTR11<HardwareSerial>;
 
-#if defined(__AVR__) || defined(ESP8266) || defined(ESP32)
+#if defined(__AVR__) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_RP2350) || defined(ARDUINO_ARCH_RENESAS)
     #include <SoftwareSerial.h>
     template class BGT24LTR11<SoftwareSerial>;
 #endif
